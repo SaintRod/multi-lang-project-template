@@ -60,7 +60,7 @@ Step 1:
 Step 2:
 1. create an empty directory and name it as desired
 2. open a terminal and navigate to ^
-3. within the newly created project direcotyr run the template creation script: `~/multi-lang-project-template/create-project.sh`
+3. within the newly created project directory run the template creation script, for example `~/multi-lang-project-template/create-project.sh`
 
 Alternatively, you can execute the script (`./create-project.sh`) within the cloned GitHub repo `./multi-lang-project-template` and then copy the results to your project directory.
 
