@@ -150,6 +150,24 @@ When the project directory exists, copy/cut and paste the results there.
 ./create-project.sh -l jL
 ```
 
+### Results
+
+```
+project-root/
+├── config
+├── data
+│   ├── input
+│   └── output
+├── docs
+├── LICENSE
+├── notebooks
+├── README.md
+├── scripts
+├── src
+├── test  # no language specified; for Julia
+└── tests # no language specified; for R and Python
+```
+
 ## Contributing
 
 Contributors welcome!
