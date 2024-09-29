@@ -63,21 +63,24 @@ Below are some examples.
 3. within the terminal run `chmod +x create-project.sh`
   - If your project root directory exists you can specify a path, e.g., `./create-project.sh -p ~/Documents/proj-root`
   - Otherwise the results will be created in the current directory
-4. If you know what language will be used you can specify it via an optional `-l` flag
-  - This is only for testing directories
-  - If no language is specified, then both the ./test and ./tests directories are created
+4. Optional flags
+  - `-l`
+
+  - `-p`
 
 ### Optional Flags
 
 - programming language flag: `-l`
-  - takes the following args
+  - Only affect the testing directory
+  - If no language is specified, then both the ./test and ./tests directories are created
+  - Takes the following args
     - r
     - py
     - python
     - jl
     - julia
-  - **WARNING** only one option should be specified, there is no guardrail if more than one option is passed to the `-l` flag
-- project root directory: `-p`
+  - **WARNING** only one option should be specified, there is no guardrail if more than one option is passed
+- Project directory: `-p`
   - takes any *existing* path
 
 ### Examples
