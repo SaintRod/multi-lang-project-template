@@ -1,10 +1,14 @@
 # Multi Language [Data Analysis] Project Template
 
-![R](static/r.png)
+![R](static/r.png){height=250, width=250}
 
-![Python](static/python.png)
+![Python](static/python.png){height=250, width=250}
 
-![Julia](static/julia.png)
+![Julia](static/julia.png){height=250, width=250}
+
+<img src="static/r.png" alt="R" height="250" width="250" style="display: inline-block; margin-right: 10px;">
+<img src="static/python.png" alt="Python" height="250" width="250" style="display: inline-block; margin-right: 10px;">
+<img src="static/julia.png" alt="Julia" height="250" width="250" style="display: inline-block;">
 
 ## About
 
