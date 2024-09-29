@@ -7,7 +7,7 @@ The purpose of this work is to create a language agnostic project template for d
 ## Insipration
 
 I work with Julia, Python, and R.
-While the language-specific conventions are different the projects are usually similarly structured.
+While the language-specific conventions are different the projects are usually structured similarly.
 
 Usually, I start with what I want to accomplish before I pick what language to work with.
 So, I decided that it would helpful to automate and standardize the steps prior to picking a language.
