@@ -52,26 +52,70 @@ Below are some examples.
 
 ## How to Use
 
-Step 1:
-
 1. git clone repo
-2. within a terminal: `chmod +x create-project.sh`
+2. Open a terminal and navigate to ^
+3. within the terminal run `chmod +x create-project.sh`
+  - If your project root directory exists you can specify a path, e.g., `./create-project.sh -p ~/Documents/proj-root`
+  - Otherwise the results will be created in the current directory
+4. If you know what language will be used you can specify it via an optional `-l` flag
+  - This is only for testing directories
+  - If no language is specified, then both the ./test and ./tests directories are created
 
-Step 2:
-1. create an empty directory and name it as desired
-2. open a terminal and navigate to ^
-3. within the newly created project directory run the template creation script, for example `~/multi-lang-project-template/create-project.sh`
+### Optional Flags
 
-Alternatively, you can execute the script (`./create-project.sh`) within the cloned GitHub repo `./multi-lang-project-template` and then copy the results to your project directory.
+- programming language flag: `-l`
+  - takes the following args
+    - r
+    - py
+    - python
+    - jl
+    - julia
+  - **WARNING** only one option should be specified, there is no guardrail if more than one option is passed to the `-l` flag
+- project root directory: `-p`
+  - takes any *existing* path
 
-## Work in Progress
+### Examples
 
-As can be seen above, the current process is a bit manual.
-It would be nice to tell the script where to create the results, via an argument perhaps.
-For example, `./create-project.sh Documents/path-to-project`
+Get the script.
 
-There are two test directories because Julia (./test) differs from Python and R (./tests).
-Maybe it's unnecessary to have both ./test and ./tests.
-However, for multi-language projects having both would be helpful.
-Another argument or option might be helpful to specify which test directory to create: ./test, ./tests, or both
+```
+mkdir git
+cd git
+git clone https://github.com/SaintRod/multi-lang-project-template.git
+cd multi-lang-project-template
+chmod +x create-project.sh
+```
+
+A) No clue what language will be used, and the project hasn't been started
+
+```
+# the following will create the results in the current directory
+# copy the results to the project root directory when it's been created
+./create-project.sh
+```
+
+B) No clue what language will be used, and the project root directory exists
+```
+./create-project.sh -p ~/.../project-root
+```
+
+C) You know what language will be used, and the project root directory exists
+```
+# R
+./create-project.sh -l r -p ~/.../project-root
+./create-project.sh -l R -p ~/.../project-root
+
+# Python
+./create-project.sh -l py -p ~/.../project-root
+./create-project.sh -l python -p ~/.../project-root
+./create-project.sh -l PY -p ~/.../project-root
+./create-project.sh -l PYTHON -p ~/.../project-root
+./create-project.sh -l pYtHoN -p ~/.../project-root
+
+# Julia
+./create-project.sh -l jl -p ~/.../project-root
+./create-project.sh -l julia -p ~/.../project-root
+./create-project.sh -l JL -p ~/.../project-root
+./create-project.sh -l jL -p ~/.../project-root
+```
 
