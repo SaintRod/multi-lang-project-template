@@ -6,9 +6,11 @@
 
 ![Julia](static/julia.png){height=250, width=250}
 
-<img src="static/r.png" alt="R" height="250" width="250" style="display: inline-block; margin-right: 10px;">
-<img src="static/python.png" alt="Python" height="250" width="250" style="display: inline-block; margin-right: 10px;">
-<img src="static/julia.png" alt="Julia" height="250" width="250" style="display: inline-block;">
+<p float="left">
+  <img src="static/r.png" width="250" height="250" hspace="10"/>
+  <img src="static/python.png" width="250" height="250" hspace="10"/> 
+  <img src="static/julia.png" width="250" height="250" hspace="10"/>
+</p>
 
 ## About
 
