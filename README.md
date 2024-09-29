@@ -1,8 +1,10 @@
 # Multi Language [Data Analysis] Project Template
 
-![R](./media/r.png)
-![Python](.media/python.png)
-![Julia](.media/julia.png)
+![R](static/r.png)
+
+![Python](static/python.png)
+
+![Julia](static/julia.png)
 
 ## About
 
