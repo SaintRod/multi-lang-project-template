@@ -93,9 +93,11 @@ chmod +x create-project.sh
 
 A) No clue what language will be used, and the project hasn't been started
 
+The following will create the results in the current directory.
+Copy/cut and paste the results to the project root directory when it's been created.
+
+
 ```
-# the following will create the results in the current directory
-# copy the results to the project root directory when it's been created
 ./create-project.sh
 ```
 
@@ -148,4 +150,8 @@ When the project directory exists, copy/cut and paste the results there.
 ./create-project.sh -l jL
 ```
 
+## Contributing
 
+Contributors welcome!
+
+Fork the repo, make changes, and submit a PR :)
