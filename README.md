@@ -1,15 +1,9 @@
 # Multi Language [Data Analysis] Project Template
 
-![R](static/r.png){height=250, width=250}
-
-![Python](static/python.png){height=250, width=250}
-
-![Julia](static/julia.png){height=250, width=250}
-
 <p float="left">
-  <img src="static/r.png" width="250" height="250" hspace="10"/>
-  <img src="static/python.png" width="250" height="250" hspace="10"/> 
-  <img src="static/julia.png" width="250" height="250" hspace="10"/>
+  <img src="static/r.png" width="150" height="150" hspace="10"/>
+  <img src="static/python.png" width="150" height="150" hspace="10"/> 
+  <img src="static/julia.png" width="350" height="250" hspace="10"/>
 </p>
 
 ## About
