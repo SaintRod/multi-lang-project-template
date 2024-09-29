@@ -61,12 +61,6 @@ Below are some examples.
 1. git clone repo
 2. Open a terminal and navigate to ^
 3. within the terminal run `chmod +x create-project.sh`
-  - If your project root directory exists you can specify a path, e.g., `./create-project.sh -p ~/Documents/proj-root`
-  - Otherwise the results will be created in the current directory
-4. Optional flags
-  - `-l`
-
-  - `-p`
 
 ### Optional Flags
 
@@ -81,7 +75,8 @@ Below are some examples.
     - julia
   - **WARNING** only one option should be specified, there is no guardrail if more than one option is passed
 - Project directory: `-p`
-  - takes any *existing* path
+  - Takes any *existing* path; e.g., `./create-project.sh -p ~/Documents/proj-root`
+  - Otherwise the results will be created in the current directory
 
 ### Examples
 
