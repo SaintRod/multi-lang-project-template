@@ -64,21 +64,22 @@ Below are some examples.
 
 ### Optional Flags
 
-- programming language flag: `-l`
+- `-l`: Programming language flag
   - Only affect the testing directory
   - If no language is specified, then both the ./test and ./tests directories are created
-  - Takes the following args
-    - r
-    - py
-    - python
-    - jl
-    - julia
+    - Delete the unused testing directory
+  - Takes the following args (case insensitive)
+    - `r`
+    - `py`
+    - `python`
+    - `jl`
+    - `julia`
   - **WARNING** only one option should be specified, there is no guardrail if more than one option is passed
-- Project directory: `-p`
+- `-p`: Project directory
   - Takes any *existing* path; e.g., `./create-project.sh -p ~/Documents/proj-root`
   - Otherwise the results will be created in the current directory
 
-### Examples
+## Examples
 
 Get the script.
 
@@ -122,4 +123,29 @@ C) You know what language will be used, and the project root directory exists
 ./create-project.sh -l JL -p ~/.../project-root
 ./create-project.sh -l jL -p ~/.../project-root
 ```
+
+D) You know what language will be used, but the project root directory doesn't exist
+
+In this scenario the results will be created in the current directory.
+When the project directory exists, copy/cut and paste the results there.
+
+```
+# R
+./create-project.sh -l r
+./create-project.sh -l R
+
+# Python
+./create-project.sh -l py
+./create-project.sh -l python
+./create-project.sh -l PY
+./create-project.sh -l PYTHON
+./create-project.sh -l pYtHoN
+
+# Julia
+./create-project.sh -l jl
+./create-project.sh -l julia
+./create-project.sh -l JL
+./create-project.sh -l jL
+```
+
 
