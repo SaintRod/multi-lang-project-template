@@ -1,6 +1,6 @@
 # Multi Language [Data Analysis] Project Template
 
-<p float="left">
+<p float="center">
   <img src="static/r.png" width="150" height="150" hspace="10"/>
   <img src="static/python.png" width="150" height="150" hspace="10"/> 
   <img src="static/julia.png" width="350" height="250" hspace="10"/>
