@@ -1,5 +1,9 @@
 # Multi Language [Data Analysis] Project Template
 
+![R](./media/r.png)
+![Python](.media/python.png)
+![Julia](.media/julia.png)
+
 ## About
 
 The purpose of this work is to create a language agnostic project template for data analysis.
