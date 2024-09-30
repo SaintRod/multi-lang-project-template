@@ -158,15 +158,21 @@ project-root/
 ├── data
 │   ├── input
 │   └── output
-├── docs
+├── docs        # technical documentation
 ├── LICENSE
-├── notebooks
+├── notebooks   # literate programming medium
 ├── README.md
-├── scripts
-├── src
-├── test  # no language specified; for Julia
-└── tests # no language specified; for R and Python
+├── scripts     # files that import from ./src
+├── src         # functions or modules
+├── test        # for Julia
+└── tests       # for R and Python
 ```
+
+Additional details:
+
+- docs - Technical documentation created programmatically or manually by users
+- notebooks - Any literate programming medium such as Jupyter Labs or Quarto markdown files
+- test and tests - If both testing directories are present, it implies no language was specified
 
 ## Contributing
 
