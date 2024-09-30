@@ -36,7 +36,7 @@ Currently focused on Ubuntu-based Linux distros, such as Linux Mint but the setu
 
 ### R
 
-- uses the renv package manage dependencies
+- uses the renv package to manage dependencies
 - tests are housed under ./tests
 
 ## Similar works
@@ -65,9 +65,9 @@ Below are some examples.
 ### Optional Flags
 
 - `-l`: Programming language flag
-  - Only affect the testing directory
+  - Only affects the testing directory
   - If no language is specified, then both the ./test and ./tests directories are created
-    - Delete the unused testing directory
+    - Simply delete the unused testing directory when a language for the project is chosen
   - Takes the following args (case insensitive)
     - `r`
     - `py`
