@@ -171,7 +171,7 @@ project-root/
 Additional details:
 
 - docs - Technical documentation created programmatically or manually by users
-- notebooks - Any literate programming medium such as Jupyter Labs or Quarto markdown files
+- notebooks - Any literate programming medium such as Jupyter Labs, Quarto markdown, RMarkdown, or Pluto notebooks
 - test and tests - If both testing directories are present, it implies no language was specified
 
 ## Contributing
