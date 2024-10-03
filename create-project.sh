@@ -79,5 +79,39 @@ for file in "${files[@]}"; do
     echo "Created $path/$file"
 done
 
+# Adjust directories based on the -l selection for R
+# Only if R is selected
+if [[ "$lang" == "r" ]]; then
+  R -e "
+  if (!require('usethis', quietly = TRUE)){
+    install.packages('usethis', repos='http://cran.us.r-project.org')}
+
+  usethis::create_project(normalizePath('$path', winslash = '/'),
+    rstudio = TRUE,
+    open = rlang::is_interactive())
+  
+  use_git(message = \"Initial commit\")
+  
+  q(save = 'no')"
+  cd $path
+  rm -r R # Remove the default R directory created by usethis. Maybe we should keep it?
+
+# Only if R is selected and the path is not empty
+elif [[ "$lang" == "r" && -n "$path" ]]; then
+  R -e "
+  if (!require('usethis', quietly = TRUE)){
+    install.packages('usethis', repos='http://cran.us.r-project.org')}
+
+  usethis::create_project(normalizePath('$path', winslash = '/'),
+    rstudio = TRUE,
+    open = rlang::is_interactive())
+  
+  use_git(message = \"Initial commit\")
+  
+  q(save = 'no')"
+  cd $path
+  rm -r R # Remove the default R directory created by usethis. Maybe we should keep it?
+fi
+
 echo "Project structure created successfully at $path!"
 
