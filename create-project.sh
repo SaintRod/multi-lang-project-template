@@ -28,25 +28,25 @@ path="."
 
 # Function to convert string to lowercase
 to_lowercase() {
-    echo "$1" | tr '[:upper:]' '[:lower:]'
+  echo "$1" | tr '[:upper:]' '[:lower:]'
 }
 
 while getopts ":l:p:" opt; do
   case $opt in
-    l)
-      lang=$(to_lowercase "$OPTARG")
-      ;;
-    p)
-      path="$OPTARG"
-      ;;
-    \?)
-      echo "Invalid option: -$OPTARG" >&2
-      exit 1
-      ;;
-    :)
-      echo "Option -$OPTARG requires an argument." >&2
-      exit 1
-      ;;
+  l)
+    lang=$(to_lowercase "$OPTARG")
+    ;;
+  p)
+    path="$OPTARG"
+    ;;
+  \?)
+    echo "Invalid option: -$OPTARG" >&2
+    exit 1
+    ;;
+  :)
+    echo "Option -$OPTARG requires an argument." >&2
+    exit 1
+    ;;
   esac
 done
 
@@ -79,39 +79,52 @@ for file in "${files[@]}"; do
     echo "Created $path/$file"
 done
 
-# Adjust directories based on the -l selection for R
-# Only if R is selected
-if [[ "$lang" == "r" ]]; then
-  R -e "
-  if (!require('usethis', quietly = TRUE)){
-    install.packages('usethis', repos='http://cran.us.r-project.org')}
+# Create a .Rproj text file with defaults if R is selected
+Rproj="Version: 1.0
 
-  usethis::create_project(normalizePath('$path', winslash = '/'),
-    rstudio = TRUE,
-    open = rlang::is_interactive())
-  
-  use_git(message = \"Initial commit\")
-  
-  q(save = 'no')"
-  cd $path
-  rm -r R # Remove the default R directory created by usethis. Maybe we should keep it?
+RestoreWorkspace: No
+SaveWorkspace: No
+AlwaysSaveHistory: Default
 
-# Only if R is selected and the path is not empty
+EnableCodeIndexing: Yes
+UseSpacesForTab: Yes
+NumSpacesForTab: 4
+Encoding: UTF-8
+
+RnwWeave: knitr
+LaTeX: XeLaTeX
+
+AutoAppendNewline: Yes
+StripTrailingWhitespace: Yes
+LineEndingConversion: Posix"
+
+# Name the .Rproj file based on the directory name
+if [ "$lang" == "r" ]; then
+dir_name=$(basename "$PWD") # Get the name of the current directory name when path = "." for the .Rproj file. Necessary when creating text .Rproj file. Not necessary if we using usethis::create_project()
+  echo "$Rproj" > $path/$dir_name.Rproj
 elif [[ "$lang" == "r" && -n "$path" ]]; then
-  R -e "
-  if (!require('usethis', quietly = TRUE)){
-    install.packages('usethis', repos='http://cran.us.r-project.org')}
-
-  usethis::create_project(normalizePath('$path', winslash = '/'),
-    rstudio = TRUE,
-    open = rlang::is_interactive())
-  
-  use_git(message = \"Initial commit\")
-  
-  q(save = 'no')"
-  cd $path
-  rm -r R # Remove the default R directory created by usethis. Maybe we should keep it?
+  echo "$Rproj" > $path/$path.Rproj
 fi
 
-echo "Project structure created successfully at $path!"
+# Adjust directories based on the -l selection for R
+# Only if R is selected
+ if [[ "$lang" == "r" ]]; then
+   R -e "
+   if (!require('renv', quietly = TRUE)){
+     install.packages('renv', repos='http://cran.us.r-project.org')}
+   
+   renv::init(project = '$path')
+   q(save = 'no')"
 
+# # Only if R is selected and the path is not empty
+ elif [[ "$lang" == "r" && -n "$path" ]]; then
+   R -e "
+   if (!require('renv', quietly = TRUE)){
+     install.packages('renv', repos='http://cran.us.r-project.org')}
+   
+   renv::init(project = '$path')
+   q(save = 'no')"
+ fi
+
+
+echo "Project structure created successfully at $path!"
