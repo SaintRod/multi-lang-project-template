@@ -28,25 +28,25 @@ path="."
 
 # Function to convert string to lowercase
 to_lowercase() {
-    echo "$1" | tr '[:upper:]' '[:lower:]'
+  echo "$1" | tr '[:upper:]' '[:lower:]'
 }
 
 while getopts ":l:p:" opt; do
   case $opt in
-    l)
-      lang=$(to_lowercase "$OPTARG")
-      ;;
-    p)
-      path="$OPTARG"
-      ;;
-    \?)
-      echo "Invalid option: -$OPTARG" >&2
-      exit 1
-      ;;
-    :)
-      echo "Option -$OPTARG requires an argument." >&2
-      exit 1
-      ;;
+  l)
+    lang=$(to_lowercase "$OPTARG")
+    ;;
+  p)
+    path="$OPTARG"
+    ;;
+  \?)
+    echo "Invalid option: -$OPTARG" >&2
+    exit 1
+    ;;
+  :)
+    echo "Option -$OPTARG requires an argument." >&2
+    exit 1
+    ;;
   esac
 done
 
@@ -79,5 +79,21 @@ for file in "${files[@]}"; do
     echo "Created $path/$file"
 done
 
-echo "Project structure created successfully at $path!"
+# Only if R is selected and the path is not empty
+# 1. If not already installed, install renv in the base R env as it's best practice to use project envs
+# 2. Initialize the project env in the project path
+# 3. Install usethis
+# 4. Create an RStudio .Rproj file
+ if [[ "$lang" == "r" && -n "$path" ]]; then
+   R -e "
+   if (!require('renv', quietly = TRUE)){
+     install.packages('renv', repos='http://cran.us.r-project.org')}
+   
+   renv::init(project = '$path')
+   renv::install('usethis')
+   usethis::create_project(path = '.', rstudio=TRUE, open=FALSE)
+   q(save = 'no')"
+ fi
 
+# The end
+echo "Project structure created successfully at $path!"
