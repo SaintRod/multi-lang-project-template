@@ -79,52 +79,21 @@ for file in "${files[@]}"; do
     echo "Created $path/$file"
 done
 
-# Create a .Rproj text file with defaults if R is selected
-Rproj="Version: 1.0
-
-RestoreWorkspace: No
-SaveWorkspace: No
-AlwaysSaveHistory: Default
-
-EnableCodeIndexing: Yes
-UseSpacesForTab: Yes
-NumSpacesForTab: 4
-Encoding: UTF-8
-
-RnwWeave: knitr
-LaTeX: XeLaTeX
-
-AutoAppendNewline: Yes
-StripTrailingWhitespace: Yes
-LineEndingConversion: Posix"
-
-# Name the .Rproj file based on the directory name
-if [ "$lang" == "r" ]; then
-dir_name=$(basename "$PWD") # Get the name of the current directory name when path = "." for the .Rproj file. Necessary when creating text .Rproj file. Not necessary if we using usethis::create_project()
-  echo "$Rproj" > $path/$dir_name.Rproj
-elif [[ "$lang" == "r" && -n "$path" ]]; then
-  echo "$Rproj" > $path/$path.Rproj
-fi
-
-# Adjust directories based on the -l selection for R
-# Only if R is selected
- if [[ "$lang" == "r" ]]; then
+# Only if R is selected and the path is not empty
+# 1. If not already installed, install renv in the base R env as it's best practice to use project envs
+# 2. Initialize the project env in the project path
+# 3. Install usethis
+# 4. Create an RStudio .Rproj file
+ if [[ "$lang" == "r" && -n "$path" ]]; then
    R -e "
    if (!require('renv', quietly = TRUE)){
      install.packages('renv', repos='http://cran.us.r-project.org')}
    
    renv::init(project = '$path')
-   q(save = 'no')"
-
-# # Only if R is selected and the path is not empty
- elif [[ "$lang" == "r" && -n "$path" ]]; then
-   R -e "
-   if (!require('renv', quietly = TRUE)){
-     install.packages('renv', repos='http://cran.us.r-project.org')}
-   
-   renv::init(project = '$path')
+   renv::install('usethis')
+   usethis::create_project(path = '.', rstudio=TRUE, open=FALSE)
    q(save = 'no')"
  fi
 
-
+# The end
 echo "Project structure created successfully at $path!"
