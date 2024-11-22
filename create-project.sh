@@ -91,7 +91,7 @@ done
    
    renv::init(project = '$path')
    renv::install('usethis')
-   usethis::create_project(path = '.', rstudio=TRUE, open=FALSE)
+   usethis::create_project(path = '$path', rstudio=TRUE, open=FALSE)
    q(save = 'no')"
  fi
 
