@@ -69,7 +69,7 @@ Below are some examples.
 	- Windows
 		- choose the `.ps1` extension
 
-### Optional Flags
+### Flags
 
 - `-l`: Programming language flag
   - Only affects the testing directory
@@ -81,8 +81,8 @@ Below are some examples.
     - `python`
     - `jl`
     - `julia`
-  - **WARNING** only one option should be specified, there is no guardrail if more than one option is passed
-- `-p`: Project directory (required)
+  - **WARNING** only one language should be specified, there is no guardrail if more than one option is passed
+- `-p`: Project directory (**required**)
   - Takes any *existing* path
 
 
