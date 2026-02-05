@@ -90,8 +90,6 @@ done
      install.packages('renv', repos='http://cran.us.r-project.org')}
    
    renv::init(project = '$path')
-   renv::install('usethis')
-   usethis::create_project(path = '$path', rstudio=TRUE, open=FALSE)
    q(save = 'no')"
  fi
 
