@@ -10,7 +10,7 @@
 
 The purpose of this work is to create a language agnostic project template for data analysis.
 
-## Insipration
+## Inspiration
 
 I work with Julia, Python, and R.
 While the language-specific conventions are different the projects are usually structured similarly.
@@ -20,7 +20,8 @@ So, I decided that it would helpful to automate and standardize the steps prior 
 
 ## Operating Systems
 
-Currently focused on Ubuntu-based Linux distros, such as Linux Mint but the setup script should work for most Linux distros.
+- Linux (shell)
+- Windows (powershell)
 
 ## Language-Specific Conventions
 
@@ -60,9 +61,15 @@ Below are some examples.
 
 1. git clone repo
 2. Open a terminal and navigate to ^
-3. within the terminal run `chmod +x create-project.sh`
+3. select the appropriate file based on your OS
 
-### Optional Flags
+	- Linux:
+		- choose the `.sh` extension
+		- within the terminal run `chmod +x create-project.sh`
+	- Windows
+		- choose the `.ps1` extension
+
+### Flags
 
 - `-l`: Programming language flag
   - Only affects the testing directory
@@ -74,10 +81,10 @@ Below are some examples.
     - `python`
     - `jl`
     - `julia`
-  - **WARNING** only one option should be specified, there is no guardrail if more than one option is passed
-- `-p`: Project directory
-  - Takes any *existing* path; e.g., `./create-project.sh -p ~/Documents/proj-root`
-  - Otherwise the results will be created in the current directory
+  - **WARNING** only one language should be specified, there is no guardrail if more than one option is passed
+- `-p`: Project directory (**required**)
+  - Takes any *existing* path
+
 
 ## Examples
 
@@ -88,22 +95,22 @@ mkdir git
 cd git
 git clone https://github.com/SaintRod/multi-lang-project-template.git
 cd multi-lang-project-template
-chmod +x create-project.sh
+chmod +x create-project.sh #linux only
 ```
 
 A) No clue what language will be used, and the project hasn't been started
 
-The following will create the results in the current directory.
-Copy/cut and paste the results to the project root directory when it's been created.
-
+Create the project structure in the current directory
 
 ```
-./create-project.sh
+create-project.sh -p . #linux
+multi-lang-project-template\create-project.ps1 -p . #windows
 ```
 
 B) No clue what language will be used, and the project root directory exists
 ```
-./create-project.sh -p ~/.../project-root
+./create-project.sh -p ~/.../project-root #linux
+.\create-project.ps1 -p ~\...\project-root #windows
 ```
 
 C) You know what language will be used, and the project root directory exists
@@ -112,43 +119,36 @@ C) You know what language will be used, and the project root directory exists
 ./create-project.sh -l r -p ~/.../project-root
 ./create-project.sh -l R -p ~/.../project-root
 
+.\create-project.ps1 -l r -p ~\...\project-root
+.\create-project.ps1 -l R -p ~\...\project-root
+
+
 # Python
-./create-project.sh -l py -p ~/.../project-root
+./create-project.sh -l py     -p ~/.../project-root
 ./create-project.sh -l python -p ~/.../project-root
-./create-project.sh -l PY -p ~/.../project-root
+./create-project.sh -l PY     -p ~/.../project-root
 ./create-project.sh -l PYTHON -p ~/.../project-root
 ./create-project.sh -l pYtHoN -p ~/.../project-root
 
+.\create-project.ps1 -l py     -p ~\...\project-root
+.\create-project.ps1 -l python -p ~\...\project-root
+.\create-project.ps1 -l PY     -p ~\...\project-root
+.\create-project.ps1 -l PYTHON -p ~\...\project-root
+.\create-project.ps1 -l pYtHoN -p ~\...\project-root
+
+
 # Julia
-./create-project.sh -l jl -p ~/.../project-root
+./create-project.sh -l jl    -p ~/.../project-root
 ./create-project.sh -l julia -p ~/.../project-root
-./create-project.sh -l JL -p ~/.../project-root
-./create-project.sh -l jL -p ~/.../project-root
+./create-project.sh -l JL    -p ~/.../project-root
+./create-project.sh -l jL    -p ~/.../project-root
+
+.\create-project.ps1 -l jl    -p ~\...\project-root
+.\create-project.ps1 -l julia -p ~\...\project-root
+.\create-project.ps1 -l JL    -p ~\...\project-root
+.\create-project.ps1 -l jL    -p ~\...\project-root
 ```
 
-D) You know what language will be used, but the project root directory doesn't exist
-
-In this scenario the results will be created in the current directory.
-When the project directory exists, copy/cut and paste the results there.
-
-```
-# R
-./create-project.sh -l r
-./create-project.sh -l R
-
-# Python
-./create-project.sh -l py
-./create-project.sh -l python
-./create-project.sh -l PY
-./create-project.sh -l PYTHON
-./create-project.sh -l pYtHoN
-
-# Julia
-./create-project.sh -l jl
-./create-project.sh -l julia
-./create-project.sh -l JL
-./create-project.sh -l jL
-```
 
 ### Results
 

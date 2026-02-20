@@ -24,7 +24,7 @@ files=(
 # -l flag for language-specific directories
 # -p path
 lang=""
-path="."
+path=""
 
 # Function to convert string to lowercase
 to_lowercase() {
@@ -49,6 +49,12 @@ while getopts ":l:p:" opt; do
     ;;
   esac
 done
+
+# Enforce required -p flag (no implicit current-directory behavior)
+if [[ -z "$path" ]]; then
+  echo "Error: -p <path> is required. Use -p . to target the current directory." >&2
+  exit 1
+fi
 
 # Check if the specified path exists
 if [[ ! -d "$path" ]]; then
@@ -90,8 +96,6 @@ done
      install.packages('renv', repos='http://cran.us.r-project.org')}
    
    renv::init(project = '$path')
-   renv::install('usethis')
-   usethis::create_project(path = '$path', rstudio=TRUE, open=FALSE)
    q(save = 'no')"
  fi
 
