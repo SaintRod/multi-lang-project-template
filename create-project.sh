@@ -6,7 +6,7 @@ dirs=(
     "data"
     "data/input"
     "data/output"
-    "docs"
+    "documentation"
     "config"
     "notebooks"
     "src"
