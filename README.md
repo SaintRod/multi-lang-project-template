@@ -162,10 +162,10 @@ project-root/
 ├── LICENSE
 ├── notebooks		# literate programming medium
 ├── README.md
-├── scripts		# files that import from ./src
-├── src			# functions or modules
-├── test		# for Julia
-└── tests		# for R and Python
+├── scripts			# files that import from ./src
+├── src				# functions or modules
+├── test			# for Julia
+└── tests			# for R and Python
 ```
 
 Additional details:
