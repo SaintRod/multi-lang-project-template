@@ -198,3 +198,7 @@ pwsh -NoProfile -File tests/create-project_test.ps1
 
 The second command needs `pwsh` (PowerShell 7). Both suites run in CI on
 every push and pull request.
+
+Note: the PowerShell suite runs on Linux in CI, not Windows. Path and
+filesystem behaviour is covered; Windows-specific behaviour
+(`Resolve-Path`, drive letters, `Get-Help`) is not.
