@@ -67,4 +67,6 @@ cruft, and editor files independent of language.
 **Open questions:**
 
 - Whether to also update the template repo's own `.gitignore`
+  (resolved: yes, via Task 3 of `plans/gitignore-defaults.md`)
 - Whether to ignore `data/output/` in generated projects
+  (decided: left out, too opinionated for a data-analysis template)

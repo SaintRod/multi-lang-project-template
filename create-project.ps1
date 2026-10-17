@@ -16,7 +16,9 @@
 
   - Creates files:
       .gitignore, LICENSE, README.md (plus .Renviron for R)
-    For R, .Renviron is added to .gitignore to keep credentials out of git.
+    Every .gitignore gets universal entries (secrets, OS/editor cruft, logs)
+    plus a language-specific block chosen by -l. For R, this includes
+    .Renviron to keep credentials out of git
 
 
 .PARAMETER Language
