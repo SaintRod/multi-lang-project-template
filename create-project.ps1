@@ -8,7 +8,7 @@
   Purpose: create folders and placeholder files only (no language-specific tooling).
 
   - Creates directories:
-      data, data/input, data/output, docs, config, notebooks, src, scripts
+      data, data/input, data/output, documentation, config, notebooks, src, scripts, research, plans, handoffs
     plus language-specific test folders:
       * R / Python  -> tests
       * Julia       -> test
@@ -79,7 +79,10 @@ $dirs = @(
     'config',
     'notebooks',
     'src',
-    'scripts'
+    'scripts',
+    'research',
+    'plans',
+    'handoffs'
 )
 
 # Define files

@@ -11,6 +11,9 @@ dirs=(
     "notebooks"
     "src"
     "scripts"
+    "research"
+    "plans"
+    "handoffs"
 )
 
 # Define files
