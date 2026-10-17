@@ -74,6 +74,11 @@ else
     dirs+=("test" "tests")
 fi
 
+# R reads .Renviron at startup for project-level environment variables
+if [[ "$lang" == "r" ]]; then
+    files+=(".Renviron")
+fi
+
 # Create directories
 echo "Creating directories at $path..."
 for dir in "${dirs[@]}"; do
@@ -86,6 +91,67 @@ echo "Creating files at $path..."
 for file in "${files[@]}"; do
     touch "$path/$file"
     echo "Created $path/$file"
+done
+
+# Sensible default .gitignore entries.
+# Universal entries apply to every project; language entries are
+# appended based on -l. Appends are idempotent so re-runs do not
+# duplicate lines.
+gitignore_lines=(
+    ".env"
+    ".env.*"
+    "!.env.example"
+    "/.roborev/"
+    ".DS_Store"
+    "Thumbs.db"
+    "Desktop.ini"
+    ".vscode/"
+    ".idea/"
+    "*.swp"
+    "*.log"
+)
+
+case "$lang" in
+    r)
+        gitignore_lines+=(
+            ".Renviron"
+            ".Rproj.user/"
+            ".Rhistory"
+            ".RData"
+            ".Ruserdata"
+        )
+        ;;
+    py|python)
+        gitignore_lines+=(
+            "__pycache__/"
+            "*.py[cod]"
+            ".venv/"
+            "venv/"
+            ".pytest_cache/"
+            ".mypy_cache/"
+            ".ruff_cache/"
+            ".ipynb_checkpoints/"
+            "*.egg-info/"
+            "dist/"
+            "build/"
+        )
+        ;;
+    jl|julia)
+        gitignore_lines+=("*.jl.cov" "*.jl.mem")
+        ;;
+esac
+
+# Append each missing pattern, keeping existing content intact
+for line in "${gitignore_lines[@]}"; do
+    if ! grep -qxF "$line" "$path/.gitignore"; then
+        # Prepend a newline if the file lacks a trailing one, so we
+        # append a line instead of gluing onto the previous one
+        if [[ -s "$path/.gitignore" ]] &&
+           [[ -n "$(tail -c 1 "$path/.gitignore")" ]]; then
+            printf '\n' >> "$path/.gitignore"
+        fi
+        printf '%s\n' "$line" >> "$path/.gitignore"
+    fi
 done
 
 # Only if R is selected and the path is not empty

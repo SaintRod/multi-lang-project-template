@@ -15,7 +15,10 @@
       * unspecified -> test and tests
 
   - Creates files:
-      .gitignore, LICENSE, README.md
+      .gitignore, LICENSE, README.md (plus .Renviron for R)
+    Every .gitignore gets universal entries (secrets, OS/editor cruft, logs)
+    plus a language-specific block chosen by -l. For R, this includes
+    .Renviron to keep credentials out of git
 
 
 .PARAMETER Language
@@ -99,6 +102,9 @@ switch ($lang) {
     default                          { $dirs += @('test','tests') }
 }
 
+# R reads .Renviron at startup for project-level environment variables
+if ($lang -eq 'r') { $files += '.Renviron' }
+
 Write-Host "Creating directories at $targetPath..."
 foreach ($dir in $dirs) {
     $fullDir = Join-Path -Path $targetPath -ChildPath $dir
@@ -116,6 +122,72 @@ foreach ($file in $files) {
         (Get-Item -LiteralPath $fullFile).LastWriteTime = Get-Date
     }
     Write-Host "Created $fullFile"
+}
+
+# Sensible default .gitignore entries.
+# Universal entries apply to every project; language entries are
+# appended based on -l. Appends are idempotent so re-runs do not
+# duplicate lines.
+$gitignoreLines = @(
+    '.env',
+    '.env.*',
+    '!.env.example',
+    '/.roborev/',
+    '.DS_Store',
+    'Thumbs.db',
+    'Desktop.ini',
+    '.vscode/',
+    '.idea/',
+    '*.swp',
+    '*.log'
+)
+
+switch ($lang) {
+    'r' {
+        $gitignoreLines += @(
+            '.Renviron',
+            '.Rproj.user/',
+            '.Rhistory',
+            '.RData',
+            '.Ruserdata'
+        )
+        break
+    }
+    { $_ -in @('py', 'python') } {
+        $gitignoreLines += @(
+            '__pycache__/',
+            '*.py[cod]',
+            '.venv/',
+            'venv/',
+            '.pytest_cache/',
+            '.mypy_cache/',
+            '.ruff_cache/',
+            '.ipynb_checkpoints/',
+            '*.egg-info/',
+            'dist/',
+            'build/'
+        )
+        break
+    }
+    { $_ -in @('jl', 'julia') } {
+        $gitignoreLines += @('*.jl.cov', '*.jl.mem')
+        break
+    }
+}
+
+$gitignore = Join-Path -Path $targetPath -ChildPath '.gitignore'
+foreach ($line in $gitignoreLines) {
+    $pattern = '^' + [regex]::Escape($line) + '$'
+    $found = Select-String -LiteralPath $gitignore -Pattern $pattern -Quiet
+    if (-not $found) {
+        # Prepend a newline if the file lacks a trailing one, so we
+        # append a line instead of gluing onto the previous one
+        $content = [System.IO.File]::ReadAllText($gitignore)
+        if ($content -and -not $content.EndsWith("`n")) {
+            Add-Content -LiteralPath $gitignore -Value ''
+        }
+        Add-Content -LiteralPath $gitignore -Value $line
+    }
 }
 
 Write-Host "Project structure created successfully at $targetPath!"
