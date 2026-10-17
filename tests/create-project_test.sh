@@ -39,6 +39,8 @@ chmod +x "$shim/R"
 PATH="$shim:$PATH"
 
 work=$(mktemp -d)
+# Stay inside the trap-cleaned dir so a CWD-relative scaffold can't escape it.
+cd "$work"
 trap 'rm -rf "$work" "$shim"' EXIT
 
 default_dirs=(
