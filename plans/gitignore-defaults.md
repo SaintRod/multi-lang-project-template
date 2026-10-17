@@ -1,5 +1,6 @@
 ---
 date: 2026-10-17
+updated: 2026-10-17
 status: open
 ---
 
@@ -102,7 +103,8 @@ Assumptions and risks:
         if ! grep -qxF "$line" "$path/.gitignore"; then
             # Prepend a newline if the file lacks a trailing one, so we
             # append a line instead of gluing onto the previous one
-            if [[ -s "$path/.gitignore" && -n "$(tail -c 1 "$path/.gitignore")" ]]; then
+            if [[ -s "$path/.gitignore" ]] &&
+               [[ -n "$(tail -c 1 "$path/.gitignore")" ]]; then
                 printf '\n' >> "$path/.gitignore"
             fi
             printf '%s\n' "$line" >> "$path/.gitignore"
@@ -168,15 +170,43 @@ Assumptions and risks:
     )
 
     switch ($lang) {
-        'r' { $gitignoreLines += @('.Renviron', '.Rproj.user/', '.Rhistory', '.RData', '.Ruserdata') ; break }
-        { $_ -in @('py','python') } { $gitignoreLines += @('__pycache__/', '*.py[cod]', '.venv/', 'venv/', '.pytest_cache/', '.mypy_cache/', '.ruff_cache/', '.ipynb_checkpoints/', '*.egg-info/', 'dist/', 'build/') ; break }
-        { $_ -in @('jl','julia') } { $gitignoreLines += @('*.jl.cov', '*.jl.mem') ; break }
+        'r' {
+            $gitignoreLines += @(
+                '.Renviron',
+                '.Rproj.user/',
+                '.Rhistory',
+                '.RData',
+                '.Ruserdata'
+            )
+            break
+        }
+        { $_ -in @('py', 'python') } {
+            $gitignoreLines += @(
+                '__pycache__/',
+                '*.py[cod]',
+                '.venv/',
+                'venv/',
+                '.pytest_cache/',
+                '.mypy_cache/',
+                '.ruff_cache/',
+                '.ipynb_checkpoints/',
+                '*.egg-info/',
+                'dist/',
+                'build/'
+            )
+            break
+        }
+        { $_ -in @('jl', 'julia') } {
+            $gitignoreLines += @('*.jl.cov', '*.jl.mem')
+            break
+        }
     }
 
     $gitignore = Join-Path -Path $targetPath -ChildPath '.gitignore'
     foreach ($line in $gitignoreLines) {
         $pattern = '^' + [regex]::Escape($line) + '$'
-        if (-not (Select-String -LiteralPath $gitignore -Pattern $pattern -Quiet)) {
+        $found = Select-String -LiteralPath $gitignore -Pattern $pattern -Quiet
+        if (-not $found) {
             # Prepend a newline if the file lacks a trailing one, so we
             # append a line instead of gluing onto the previous one
             $content = [System.IO.File]::ReadAllText($gitignore)
@@ -194,10 +224,15 @@ Assumptions and risks:
     $tmp = Join-Path ([System.IO.Path]::GetTempPath()) ([guid]::NewGuid())
     New-Item -ItemType Directory -Path $tmp | Out-Null
     .\create-project.ps1 -l py -p $tmp
+    $a = (Get-Content (Join-Path $tmp '.gitignore')).Count
+    .\create-project.ps1 -l py -p $tmp
+    $b = (Get-Content (Join-Path $tmp '.gitignore')).Count
     Get-Content (Join-Path $tmp '.gitignore')
+    "before=$a after=$b"
     ```
     Success: output lists 22 lines (11 universal + 11 Python) including
-    `__pycache__/`. Not runnable here (`pwsh` absent); run on a pwsh host.
+    `__pycache__/`, and prints `before=22 after=22`. Not runnable here
+    (`pwsh` absent); run on a pwsh host.
 
 - [ ] Task 3: add universal block to the repo's own `.gitignore`
   [parallel: A]
@@ -245,6 +280,8 @@ Assumptions and risks:
 ## Commit
 
 - [ ] Inspect status, diff, and recent commits
-- [ ] Stage only files relevant to this plan, including the plan file
+- [ ] Set `status: resolved` and `updated` in research/gitignore-defaults.md
+- [ ] Stage only files relevant to this plan, including the plan and
+  research files
 - [ ] Commit without pushing
 - [ ] Do not push. The user starts Roborev review manually
