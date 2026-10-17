@@ -1,6 +1,7 @@
 ---
 date: 2026-10-17
-status: open
+updated: 2026-10-17
+status: resolved
 ---
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use
@@ -283,9 +284,9 @@ Assumptions and risks:
 
 ## Commit
 
-- [ ] Inspect status, diff, and recent commits
-- [ ] Set `status: resolved` and `updated` in research/gitignore-defaults.md
-- [ ] Stage only files relevant to this plan, including the plan and
+- [x] Inspect status, diff, and recent commits
+- [x] Set `status: resolved` and `updated` in research/gitignore-defaults.md
+- [x] Stage only files relevant to this plan, including the plan and
   research files
-- [ ] Commit without pushing
+- [x] Commit without pushing
 - [ ] Do not push. The user starts Roborev review manually
