@@ -126,6 +126,12 @@ foreach ($file in $files) {
 if ($lang -eq 'r') {
     $gitignore = Join-Path -Path $targetPath -ChildPath '.gitignore'
     if (-not (Select-String -LiteralPath $gitignore -Pattern '^\.Renviron$' -Quiet)) {
+        # Prepend a newline if the file lacks a trailing one, so we append a
+        # line instead of gluing '.Renviron' onto an existing pattern
+        $content = [System.IO.File]::ReadAllText($gitignore)
+        if ($content -and -not $content.EndsWith("`n")) {
+            Add-Content -LiteralPath $gitignore -Value ''
+        }
         Add-Content -LiteralPath $gitignore -Value '.Renviron'
     }
 }

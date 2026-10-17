@@ -95,6 +95,9 @@ done
 
 # .Renviron holds credentials; keep it out of version control
 if [[ "$lang" == "r" ]] && ! grep -qxF '.Renviron' "$path/.gitignore"; then
+    # Prepend a newline if the file lacks a trailing one, so we append a line
+    # instead of gluing '.Renviron' onto an existing pattern
+    [[ -s "$path/.gitignore" && -n "$(tail -c 1 "$path/.gitignore")" ]] && printf '\n' >> "$path/.gitignore"
     printf '.Renviron\n' >> "$path/.gitignore"
 fi
 
