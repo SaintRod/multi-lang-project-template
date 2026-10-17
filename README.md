@@ -185,3 +185,16 @@ Additional details:
 Contributors welcome!
 
 Fork the repo, make changes, and submit a PR :)
+
+### Tests
+
+Each scaffold script has a test suite that runs it in a temp directory
+and checks the result.
+
+```
+bash tests/create-project_test.sh
+pwsh -NoProfile -File tests/create-project_test.ps1
+```
+
+The second command needs `pwsh` (PowerShell 7). Both suites run in CI on
+every push and pull request.
