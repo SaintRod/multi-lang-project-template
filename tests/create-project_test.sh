@@ -185,6 +185,14 @@ assert_rc "failing R fails" 1
 assert_contains "failing R explains itself" "R failed" "$last_out"
 assert_not_contains "failing R does not claim success" "successfully" "$last_out"
 
+# --- a blocked target is reported, not swallowed ---------------------------
+# A file where a directory belongs makes mkdir fail. The run must fail too
+# instead of printing its success line.
+d="$work/blocked"; mkdir -p "$d"; : > "$d/config"
+run -p "$d"
+assert_rc "blocked directory fails" 1
+assert_not_contains "blocked directory does not claim success" "successfully" "$last_out"
+
 # --- summary ---------------------------------------------------------------
 printf '\n%d checks, %d failures\n' "$checks" "$failures"
 [[ "$failures" -eq 0 ]]

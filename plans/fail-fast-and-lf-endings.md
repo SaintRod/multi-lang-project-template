@@ -61,8 +61,9 @@ Assumptions and risks:
   `if (-not $IsWindows)`. If the CI Windows job is added later, the guard
   already keeps it from breaking
 - CI runners and the authoring machine both run as a non-root user, so a
-  read-only directory is genuinely unwritable. A root user would bypass it
-  and the test would silently stop proving anything
+  read-only directory is genuinely unwritable. Under root the mode is
+  bypassed, the scaffold succeeds, and the read-only checks fail loudly
+  rather than passing silently
 - `set -e` changes behavior on every failure path. The risk is a script
   that aborts where it previously limped on. That is the intent, and the
   existing 79-check suite guards the success paths
@@ -249,7 +250,7 @@ Assumptions and risks:
     ```bash
     bash tests/create-project_test.sh; echo "rc=$?"
     ```
-    Success: 82 checks, 0 failures, rc 0
+    Success: 82 checks, 0 failures, rc 0 (84 once Task 7 lands)
 
 - [x] Task 4: cover a blocked target in the PowerShell suite
   [parallel: A]
@@ -389,6 +390,45 @@ Assumptions and risks:
     it, so the "touch" never actually happened and nobody noticed. With
     `Stop` it became a hard failure, which broke the two re-run cases. The
     existing suite caught the regression, so no new test was needed
+
+- [x] Task 7: pin the bash mkdir fail-fast with a test
+  [after: 6]
+  - File: `tests/create-project_test.sh`
+  - Lines: 186 (anchor: `assert_not_contains "failing R does not claim
+    success"`)
+  - Change: cover the mkdir failure path, which the R test alone does not
+    pin
+  - Before:
+    ```bash
+    assert_not_contains "failing R does not claim success" "successfully" "$last_out"
+    ```
+  - After:
+    ```bash
+    assert_not_contains "failing R does not claim success" "successfully" "$last_out"
+
+    # --- a blocked target is reported, not swallowed ---------------------------
+    # A file where a directory belongs makes mkdir fail. The run must fail too
+    # instead of printing its success line.
+    d="$work/blocked"; mkdir -p "$d"; : > "$d/config"
+    run -p "$d"
+    assert_rc "blocked directory fails" 1
+    assert_not_contains "blocked directory does not claim success" "successfully" "$last_out"
+    ```
+  - Expected result: 2 new checks that FAIL when `set -euo pipefail` is
+    removed from `create-project.sh`
+  - Validate:
+    ```bash
+    bash tests/create-project_test.sh; echo "rc=$?"
+    ```
+    Success: 84 checks, 0 failures, rc 0
+  - Implementation note: added in response to the final review, which found
+    that Task 3's `set -e` behavior was pinned only for the R path. Deleting
+    `set -euo pipefail` on its own left the suite green while the mkdir bug
+    returned. Verified by mutation: with the line removed the two new checks
+    fail (`84 checks, 2 failures`); with it restored, 84 pass. A
+    name-conflict trigger is used rather than the ps1 suite's read-only
+    directory, so the check does not depend on the running user and stays
+    honest under root
 
 ## Commit
 
