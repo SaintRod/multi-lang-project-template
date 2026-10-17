@@ -159,9 +159,12 @@ project-root/
 │   ├── input
 │   └── output
 ├── documentation	# technical documentation
+├── handoffs		# compacted session handoffs for context transfer
 ├── LICENSE
 ├── notebooks		# literate programming medium
+├── plans		# implementation plans
 ├── README.md
+├── research		# exploratory thinking before planning
 ├── scripts			# files that import from ./src
 ├── src				# functions or modules
 ├── test			# for Julia
@@ -172,6 +175,9 @@ Additional details:
 
 - documentation - Technical documentation created programmatically or manually by users
 - notebooks - Any literate programming medium such as Jupyter Labs, Quarto markdown, RMarkdown, or Pluto notebooks
+- research - Exploratory thinking, investigations, and decisions before planning
+- plans - Implementation plans that align work before code changes
+- handoffs - Compacted session handoffs for transferring context between agents or sessions
 - test and tests - If both testing directories are present, it implies no language was specified
 
 ## Contributing
