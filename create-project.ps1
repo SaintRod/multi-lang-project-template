@@ -16,6 +16,7 @@
 
   - Creates files:
       .gitignore, LICENSE, README.md (plus .Renviron for R)
+    For R, .Renviron is added to .gitignore to keep credentials out of git.
 
 
 .PARAMETER Language
@@ -119,6 +120,14 @@ foreach ($file in $files) {
         (Get-Item -LiteralPath $fullFile).LastWriteTime = Get-Date
     }
     Write-Host "Created $fullFile"
+}
+
+# .Renviron holds credentials; keep it out of version control
+if ($lang -eq 'r') {
+    $gitignore = Join-Path -Path $targetPath -ChildPath '.gitignore'
+    if (-not (Select-String -LiteralPath $gitignore -Pattern '^\.Renviron$' -Quiet)) {
+        Add-Content -LiteralPath $gitignore -Value '.Renviron'
+    }
 }
 
 Write-Host "Project structure created successfully at $targetPath!"

@@ -93,6 +93,11 @@ for file in "${files[@]}"; do
     echo "Created $path/$file"
 done
 
+# .Renviron holds credentials; keep it out of version control
+if [[ "$lang" == "r" ]] && ! grep -qxF '.Renviron' "$path/.gitignore"; then
+    printf '.Renviron\n' >> "$path/.gitignore"
+fi
+
 # Only if R is selected and the path is not empty
 # 1. If not already installed, install renv in the base R env as it's best practice to use project envs
 # 2. Initialize the project env in the project path
