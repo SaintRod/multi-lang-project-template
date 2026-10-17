@@ -1,6 +1,7 @@
 ---
 date: 2026-10-17
-status: open
+updated: 2026-10-17
+status: resolved
 ---
 
 # Purpose

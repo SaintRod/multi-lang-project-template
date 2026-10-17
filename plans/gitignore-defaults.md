@@ -35,7 +35,7 @@ Assumptions and risks:
 
 # Tasks
 
-- [ ] Task 1: universal + language `.gitignore` in `create-project.sh`
+- [x] Task 1: universal + language `.gitignore` in `create-project.sh`
   [parallel: A]
   - File: `create-project.sh`
   - Lines: 96-102 (anchor:
@@ -130,7 +130,7 @@ Assumptions and risks:
     Success: output lists 16 lines (11 universal + 5 R) including
     `.Renviron`, and prints `before=16 after=16`.
 
-- [ ] Task 2: universal + language `.gitignore` in `create-project.ps1`
+- [x] Task 2: universal + language `.gitignore` in `create-project.ps1`
   [parallel: A]
   - File: `create-project.ps1`
   - Lines: 125-137 (anchor: `if ($lang -eq 'r') {` followed by
@@ -238,7 +238,7 @@ Assumptions and risks:
     `__pycache__/`, and prints `before=22 after=22`. Not runnable here
     (`pwsh` absent); run on a pwsh host.
 
-- [ ] Task 3: add universal block to the repo's own `.gitignore`
+- [x] Task 3: add universal block to the repo's own `.gitignore`
   [parallel: A]
   - File: `.gitignore`
   - Lines: 1-2 (anchor: `/.roborev/`)

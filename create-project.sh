@@ -93,13 +93,66 @@ for file in "${files[@]}"; do
     echo "Created $path/$file"
 done
 
-# .Renviron holds credentials; keep it out of version control
-if [[ "$lang" == "r" ]] && ! grep -qxF '.Renviron' "$path/.gitignore"; then
-    # Prepend a newline if the file lacks a trailing one, so we append a line
-    # instead of gluing '.Renviron' onto an existing pattern
-    [[ -s "$path/.gitignore" && -n "$(tail -c 1 "$path/.gitignore")" ]] && printf '\n' >> "$path/.gitignore"
-    printf '.Renviron\n' >> "$path/.gitignore"
-fi
+# Sensible default .gitignore entries.
+# Universal entries apply to every project; language entries are
+# appended based on -l. Appends are idempotent so re-runs do not
+# duplicate lines.
+gitignore_lines=(
+    ".env"
+    ".env.*"
+    "!.env.example"
+    "/.roborev/"
+    ".DS_Store"
+    "Thumbs.db"
+    "Desktop.ini"
+    ".vscode/"
+    ".idea/"
+    "*.swp"
+    "*.log"
+)
+
+case "$lang" in
+    r)
+        gitignore_lines+=(
+            ".Renviron"
+            ".Rproj.user/"
+            ".Rhistory"
+            ".RData"
+            ".Ruserdata"
+        )
+        ;;
+    py|python)
+        gitignore_lines+=(
+            "__pycache__/"
+            "*.py[cod]"
+            ".venv/"
+            "venv/"
+            ".pytest_cache/"
+            ".mypy_cache/"
+            ".ruff_cache/"
+            ".ipynb_checkpoints/"
+            "*.egg-info/"
+            "dist/"
+            "build/"
+        )
+        ;;
+    jl|julia)
+        gitignore_lines+=("*.jl.cov" "*.jl.mem")
+        ;;
+esac
+
+# Append each missing pattern, keeping existing content intact
+for line in "${gitignore_lines[@]}"; do
+    if ! grep -qxF "$line" "$path/.gitignore"; then
+        # Prepend a newline if the file lacks a trailing one, so we
+        # append a line instead of gluing onto the previous one
+        if [[ -s "$path/.gitignore" ]] &&
+           [[ -n "$(tail -c 1 "$path/.gitignore")" ]]; then
+            printf '\n' >> "$path/.gitignore"
+        fi
+        printf '%s\n' "$line" >> "$path/.gitignore"
+    fi
+done
 
 # Only if R is selected and the path is not empty
 # 1. If not already installed, install renv in the base R env as it's best practice to use project envs

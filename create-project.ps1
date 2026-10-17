@@ -122,17 +122,69 @@ foreach ($file in $files) {
     Write-Host "Created $fullFile"
 }
 
-# .Renviron holds credentials; keep it out of version control
-if ($lang -eq 'r') {
-    $gitignore = Join-Path -Path $targetPath -ChildPath '.gitignore'
-    if (-not (Select-String -LiteralPath $gitignore -Pattern '^\.Renviron$' -Quiet)) {
-        # Prepend a newline if the file lacks a trailing one, so we append a
-        # line instead of gluing '.Renviron' onto an existing pattern
+# Sensible default .gitignore entries.
+# Universal entries apply to every project; language entries are
+# appended based on -l. Appends are idempotent so re-runs do not
+# duplicate lines.
+$gitignoreLines = @(
+    '.env',
+    '.env.*',
+    '!.env.example',
+    '/.roborev/',
+    '.DS_Store',
+    'Thumbs.db',
+    'Desktop.ini',
+    '.vscode/',
+    '.idea/',
+    '*.swp',
+    '*.log'
+)
+
+switch ($lang) {
+    'r' {
+        $gitignoreLines += @(
+            '.Renviron',
+            '.Rproj.user/',
+            '.Rhistory',
+            '.RData',
+            '.Ruserdata'
+        )
+        break
+    }
+    { $_ -in @('py', 'python') } {
+        $gitignoreLines += @(
+            '__pycache__/',
+            '*.py[cod]',
+            '.venv/',
+            'venv/',
+            '.pytest_cache/',
+            '.mypy_cache/',
+            '.ruff_cache/',
+            '.ipynb_checkpoints/',
+            '*.egg-info/',
+            'dist/',
+            'build/'
+        )
+        break
+    }
+    { $_ -in @('jl', 'julia') } {
+        $gitignoreLines += @('*.jl.cov', '*.jl.mem')
+        break
+    }
+}
+
+$gitignore = Join-Path -Path $targetPath -ChildPath '.gitignore'
+foreach ($line in $gitignoreLines) {
+    $pattern = '^' + [regex]::Escape($line) + '$'
+    $found = Select-String -LiteralPath $gitignore -Pattern $pattern -Quiet
+    if (-not $found) {
+        # Prepend a newline if the file lacks a trailing one, so we
+        # append a line instead of gluing onto the previous one
         $content = [System.IO.File]::ReadAllText($gitignore)
         if ($content -and -not $content.EndsWith("`n")) {
             Add-Content -LiteralPath $gitignore -Value ''
         }
-        Add-Content -LiteralPath $gitignore -Value '.Renviron'
+        Add-Content -LiteralPath $gitignore -Value $line
     }
 }
 
