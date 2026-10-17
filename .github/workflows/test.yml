@@ -1,0 +1,19 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # Both scripts are tested on one Ubuntu runner: PowerShell 7 is
+      # preinstalled on GitHub's Ubuntu images, so no Windows job is needed.
+      - name: Test create-project.sh
+        run: bash tests/create-project_test.sh
+
+      - name: Test create-project.ps1
+        run: pwsh -NoProfile -File tests/create-project_test.ps1

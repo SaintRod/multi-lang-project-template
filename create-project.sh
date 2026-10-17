@@ -1,4 +1,7 @@
 #!/bin/bash
+# Fail fast: a failed mkdir/touch/R call must abort instead of falling
+# through to the success message at the end
+set -euo pipefail
 
 # Default directories
 # May be adjusted based on the -l option
@@ -159,14 +162,18 @@ done
 # 2. Initialize the project env in the project path
 # 3. Install usethis
 # 4. Create an RStudio .Rproj file
- if [[ "$lang" == "r" && -n "$path" ]]; then
-   R -e "
-   if (!require('renv', quietly = TRUE)){
-     install.packages('renv', repos='http://cran.us.r-project.org')}
-   
-   renv::init(project = '$path')
-   q(save = 'no')"
- fi
+if [[ "$lang" == "r" && -n "$path" ]]; then
+  # A missing or failing R must fail the run, not print a success message
+  if ! R -e "
+  if (!require('renv', quietly = TRUE)){
+    install.packages('renv', repos='http://cran.us.r-project.org')}
+
+  renv::init(project = '$path')
+  q(save = 'no')"; then
+    echo "Error: R failed; project setup is incomplete." >&2
+    exit 1
+  fi
+fi
 
 # The end
 echo "Project structure created successfully at $path!"
