@@ -61,7 +61,7 @@ function Assert-Rc([string]$name, [int]$expected) {
 $script:lastRc = 0
 $script:lastOut = ''
 function Invoke-Create([string[]]$CreateArgs) {
-    $script:lastOut = (& $pwshExe -NoProfile -File $create @CreateArgs 2>&1 | Out-String)
+    $script:lastOut = (& $pwshExe -NoProfile -NonInteractive -File $create @CreateArgs 2>&1 | Out-String)
     $script:lastRc = $LASTEXITCODE
 }
 
@@ -195,6 +195,7 @@ try {
     # --- error paths ------------------------------------------------------
     Invoke-Create @('-l', 'py')
     Assert-NonZero "missing -p fails"
+    Assert-Contains "missing -p explains itself" 'missing mandatory parameters' $script:lastOut
 
     $missing = Join-Path $script:work 'definitely-missing'
     Invoke-Create @('-p', $missing)
@@ -204,6 +205,7 @@ try {
     $d = New-WorkDir 'badflag'
     Invoke-Create @('-z', '-p', $d)
     Assert-NonZero "invalid flag fails"
+    Assert-Contains "invalid flag explains itself" 'A parameter cannot be found' $script:lastOut
 } finally {
     Remove-Item -Recurse -Force $script:work -ErrorAction SilentlyContinue
 }
