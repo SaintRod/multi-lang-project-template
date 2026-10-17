@@ -20,6 +20,7 @@ assert_line() { grep -qxF -- "$2" "$3" && ok "$1" || no "$1 (missing line '$2' i
 assert_no_line() { grep -qxF -- "$2" "$3" && no "$1 (unexpected line '$2' in $3)" || ok "$1"; }
 assert_eq() { [[ "$2" == "$3" ]] && ok "$1" || no "$1 (expected '$3', got '$2')"; }
 assert_contains() { [[ "$3" == *"$2"* ]] && ok "$1" || no "$1 (missing '$2' in output: $3)"; }
+assert_not_contains() { [[ "$3" != *"$2"* ]] && ok "$1" || no "$1 (unexpected '$2' in output: $3)"; }
 assert_rc() { [[ "$last_rc" == "$2" ]] && ok "$1" || no "$1 (expected exit $2, got $last_rc)"; }
 
 # Run create-project.sh, capturing combined output and exit status.
@@ -31,6 +32,14 @@ run() {
     return 0
 }
 
+# Same, with a PATH prefix so a stub can shadow a tool
+run_with_path() {
+    local prefix="$1"; shift
+    last_rc=0
+    last_out=$(PATH="$prefix:$PATH" "$create" "$@" 2>&1) || last_rc=$?
+    return 0
+}
+
 # The R branch shells out to R and runs renv::init. Stub it so the R
 # cases exercise the scaffold without needing an R install.
 shim=$(mktemp -d)
@@ -38,10 +47,15 @@ printf '#!/bin/sh\nexit 0\n' > "$shim/R"
 chmod +x "$shim/R"
 PATH="$shim:$PATH"
 
+# A stub that fails, to prove a broken R is not reported as success
+rshim=$(mktemp -d)
+printf '#!/bin/sh\nexit 1\n' > "$rshim/R"
+chmod +x "$rshim/R"
+
 work=$(mktemp -d)
 # Stay inside the trap-cleaned dir so a CWD-relative scaffold can't escape it.
 cd "$work"
-trap 'rm -rf "$work" "$shim"' EXIT
+trap 'rm -rf "$work" "$shim" "$rshim"' EXIT
 
 default_dirs=(
     data data/input data/output documentation config notebooks
@@ -162,6 +176,14 @@ d="$work/badflag"; mkdir -p "$d"
 run -z -p "$d"
 assert_rc "invalid flag fails" 1
 assert_contains "invalid flag explains itself" "Invalid option" "$last_out"
+
+# --- a failing R is reported, not swallowed --------------------------------
+# renv setup failing must not be reported as a successful scaffold
+d="$work/r-fails"; mkdir -p "$d"
+run_with_path "$rshim" -l r -p "$d"
+assert_rc "failing R fails" 1
+assert_contains "failing R explains itself" "R failed" "$last_out"
+assert_not_contains "failing R does not claim success" "successfully" "$last_out"
 
 # --- summary ---------------------------------------------------------------
 printf '\n%d checks, %d failures\n' "$checks" "$failures"

@@ -70,6 +70,11 @@ if (-not (Test-Path -LiteralPath $targetPath -PathType Container)) {
     exit 1
 }
 
+# Fail fast: a failed New-Item/Add-Content must abort instead of falling
+# through to the success message at the end. Deliberately set after the
+# path guard above so that guard keeps its single-line error message
+$ErrorActionPreference = 'Stop'
+
 # Resolve to a full path for cleaner output and for downstream tooling
 $targetPath = (Resolve-Path -LiteralPath $targetPath).Path
 
@@ -119,7 +124,8 @@ foreach ($file in $files) {
         New-Item -ItemType File -Path $fullFile -Force | Out-Null
     } else {
         # Keep existing file; touch equivalent by updating LastWriteTime
-        (Get-Item -LiteralPath $fullFile).LastWriteTime = Get-Date
+        # -Force: PowerShell treats dot-files as hidden on Unix
+        (Get-Item -LiteralPath $fullFile -Force).LastWriteTime = Get-Date
     }
     Write-Host "Created $fullFile"
 }

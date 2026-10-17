@@ -47,6 +47,10 @@ function Assert-Contains([string]$name, [string]$needle, [string]$haystack) {
     if ($haystack.Contains($needle)) { Ok $name }
     else { No "$name (missing '$needle' in output: $haystack)" }
 }
+function Assert-NotContains([string]$name, [string]$needle, [string]$haystack) {
+    if (-not $haystack.Contains($needle)) { Ok $name }
+    else { No "$name (unexpected '$needle' in output: $haystack)" }
+}
 function Assert-NonZero([string]$name) {
     if ($script:lastRc -ne 0) { Ok $name }
     else { No "$name (expected non-zero exit, got $script:lastRc)" }
@@ -191,6 +195,20 @@ try {
     Assert-Rc "-l go exits 0" 0
     Assert-Dir "-l go creates test" (Join-Path $d 'test')
     Assert-Dir "-l go creates tests" (Join-Path $d 'tests')
+
+    # --- a blocked target is reported, not swallowed ----------------------
+    # A read-only target makes every New-Item fail. The run must fail too
+    # instead of printing its success line. Unix-only: Windows needs ACLs.
+    if (-not $IsWindows) {
+        $d = New-WorkDir 'readonly'
+        [System.IO.File]::SetUnixFileMode($d,
+            [System.IO.UnixFileMode]::UserRead -bor [System.IO.UnixFileMode]::UserExecute)
+        Invoke-Create @('-p', $d)
+        Assert-NonZero "read-only target fails"
+        Assert-NotContains "read-only target does not claim success" 'successfully' $script:lastOut
+        [System.IO.File]::SetUnixFileMode($d,
+            [System.IO.UnixFileMode]::UserRead -bor [System.IO.UnixFileMode]::UserWrite -bor [System.IO.UnixFileMode]::UserExecute)
+    }
 
     # --- error paths ------------------------------------------------------
     Invoke-Create @('-l', 'py')
