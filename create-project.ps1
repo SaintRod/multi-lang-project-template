@@ -15,7 +15,7 @@
       * unspecified -> test and tests
 
   - Creates files:
-      .gitignore, LICENSE, README.md
+      .gitignore, LICENSE, README.md (plus .Renviron for R)
 
 
 .PARAMETER Language
@@ -98,6 +98,9 @@ switch ($lang) {
     { $_ -in @('jl','julia') }       { $dirs += 'test'  ; break }
     default                          { $dirs += @('test','tests') }
 }
+
+# R reads .Renviron at startup for project-level environment variables
+if ($lang -eq 'r') { $files += '.Renviron' }
 
 Write-Host "Creating directories at $targetPath..."
 foreach ($dir in $dirs) {

@@ -74,6 +74,11 @@ else
     dirs+=("test" "tests")
 fi
 
+# R reads .Renviron at startup for project-level environment variables
+if [[ "$lang" == "r" ]]; then
+    files+=(".Renviron")
+fi
+
 # Create directories
 echo "Creating directories at $path..."
 for dir in "${dirs[@]}"; do
