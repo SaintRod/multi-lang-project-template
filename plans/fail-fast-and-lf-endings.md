@@ -36,8 +36,9 @@ Evidence collected before planning, all reproduced in this session:
 - `$ErrorActionPreference = 'Stop'` makes the existing `Write-Error` guard
   at `create-project.ps1:69` terminate with exit code 1 and still emit
   `does not exist`, so the existing guard assertions keep passing
-- `pwsh` 7.4.6 is available at `/tmp/opencode/pwsh/pwsh`, so the
-  PowerShell half is validated here rather than deferred
+- The PowerShell half was validated against a temporarily downloaded
+  `pwsh` 7.4.6 rather than deferred. That download has since been removed,
+  so the Validate commands below assume `pwsh` is on PATH
 
 Scope:
 
@@ -304,7 +305,7 @@ Assumptions and risks:
   - Expected result: 2 new checks that FAIL against the unmodified script
   - Validate:
     ```bash
-    /tmp/opencode/pwsh/pwsh -NoProfile -File tests/create-project_test.ps1; echo "rc=$?"
+    pwsh -NoProfile -File tests/create-project_test.ps1; echo "rc=$?"
     ```
     Success before Task 5: `read-only target fails` and
     `read-only target does not claim success` both report FAIL, rc 1.
@@ -347,7 +348,7 @@ Assumptions and risks:
     non-zero without a success line
   - Validate:
     ```bash
-    /tmp/opencode/pwsh/pwsh -NoProfile -File tests/create-project_test.ps1; echo "rc=$?"
+    pwsh -NoProfile -File tests/create-project_test.ps1; echo "rc=$?"
     ```
     Success: 81 checks, 0 failures, rc 0
   - Implementation note: the plan first placed the assignment at the top of
@@ -378,7 +379,7 @@ Assumptions and risks:
   - Expected result: re-running against an existing `.gitignore` exits 0
   - Validate:
     ```bash
-    /tmp/opencode/pwsh/pwsh -NoProfile -File tests/create-project_test.ps1; echo "rc=$?"
+    pwsh -NoProfile -File tests/create-project_test.ps1; echo "rc=$?"
     ```
     Success: 81 checks, 0 failures, rc 0, including
     `-l py over existing .gitignore exits 0` and
